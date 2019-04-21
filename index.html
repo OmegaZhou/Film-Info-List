@@ -1,0 +1,223 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<style>
+		#main{
+			text-align:center;
+		}
+		#film{
+			
+			
+		}
+		.film_table{
+			position:relative;
+			left:30%;
+			border-spacing:10px;
+		}
+		
+		.img_item{
+			width:100px;
+			height:120px;
+		}
+		
+		#page{
+			/*text-align:left;
+			position:relative;
+			left:13%;*/
+		}
+		table p{
+			font-size:13px;
+		}
+		
+		table td{
+			max-width:500px;
+			text-align:left;
+		}
+		
+		.rate{
+			
+		}
+	</style>
+	<script type="text/javascript">
+		function debug(str)
+		{
+			console.log(str);
+		}
+		
+		var film_information;
+		var film_num_per_page=20;
+		
+		function comp(a,b)
+		{
+			return b.rating.average-a.rating.average;
+		}
+		function getJson(result)
+		{
+			film_information=result;
+        }
+		
+		
+		
+		function clear(id)
+		{
+			document.getElementById(id).innerHTML="";
+		}
+		
+		function addNewFilm(film)
+		{
+			var list=document.getElementById("film_list").innerHTML;
+			list+='<table class="film_table" >';
+			list+='<tr class="item">';
+			list+='<td >'+'<a href="detail.html?id='+film._id+'">'+'<img class="img_item" src="'+film.poster+'"/> </a></td>';
+			list+='<td > <div class="information"> <div class="film_name"> <a href="detail.html?id='+film._id+'">' + film.title+'</a> </div>';
+			list+='<div class="rate"><p> 评分:'+film.rating.average+'('+film.rating.rating_people+'人评价)'+'</p> </div>';
+			
+			list+='<div> <p>'
+			var flag=1;
+			var num=15;
+			for(var i=0;i<film.pubdate.length&&flag;++i){
+				if(film.pubdate[i]=="")
+				continue;
+				if(i!=0){
+					list+='/';
+				}
+				list+=film.pubdate[i];
+				--num;
+				if(num==0){
+					flag=0;
+					continue;
+				}
+				
+					
+			}
+			for(var i=0;i<film.genres.length&&flag;++i){
+				if(film.genres[i]=="")
+				continue;
+				list+='/';
+				list+=film.genres[i];
+				--num;
+				if(num==0){
+					flag=0;
+					continue;
+				}
+			}
+			for(var i=0;i<film.casts.length&&flag;++i){
+				if(film.casts[i].name=="")
+				continue;
+				list+='/';
+				list+=film.casts[i].name;
+				--num;
+				if(num==0){
+					flag=0;
+					continue;
+				}
+			}
+			if(flag==0){
+				list+='...';
+			}
+			list+='</p> </div>';
+			list+='</div> </td>';
+			list+='</tr>';
+			document.getElementById("film_list").innerHTML=list;
+		}	
+		
+		function initFilmPage(film,page_num)
+		{
+			var start_item=page_num*film_num_per_page;
+			clear("film_list")
+			for(var i=0;start_item+i<film.length&&i<film_num_per_page;++i){
+				addNewFilm(film[start_item+i]);
+			}
+		}
+		
+		var temp;
+		function createPageLabel(num)
+		{
+			var label=document.getElementById("page");
+			label.innerHTML+='<a href="javascript:void(0)" onclick="initFilmPage(temp,'+num+')">['+(num+1)+']'+'</a>'+'<span>&emsp;</span>';
+		}
+		
+		function initPageLabel(film)
+		{
+			clear("page");
+			temp=film;
+			var num=film.length/film_num_per_page;
+			for(var i=0;i<num;++i){
+				createPageLabel(i);
+			}
+		}
+		
+		function search()
+		{
+			var info=document.getElementById("search_info").value;
+			var film=new Array();
+			var size=0;
+			for(var i=0;i<film_information.length;++i){
+				var film_name=film_information[i].title;
+				var check=0;
+				for(var j=0;j<film_name.length;++j){
+					if(info==film_name.substr(j,Math.min(info.length,film_name.length-j))){
+						check=1;
+						break;
+					}
+				}
+				var casts=film_information[i].casts;
+				for(var j=0;j<casts.length&&check==0;++j){
+					for(var k=0;k<casts[j].name.length;++k){
+						if(info==casts[j].name.substr(k,Math.min(info.length,casts[j].name.length-j))){
+							check=1;
+							break;
+						}
+					}
+				}
+				if(check==1){
+					film[size]=film_information[i];
+					++size;
+				}
+			}
+			initFilmPage(film,0);
+			initPageLabel(film);
+		}
+		
+		function searchByKey()
+		{
+			if(event.keyCode==13){
+				search();
+			}
+			
+		}
+		
+	</script>
+	<script type="text/javascript" src="films.json">
+	</script>
+	<script type="text/javascript">
+		film_information.sort(comp);
+		var page_num=film_information.length/film_num_per_page;
+		
+	</script>
+</head>
+
+<body>
+	<div id="main">
+		<form id="search" onsubmit="return false;">
+			<input type="text" id="search_info" onkeypress="searchByKey()"/>
+			<input type="button" value="搜索" onclick="search()" />
+		</form>
+		<div id="film">
+			<h1>电影排行榜</h1>
+			<div id="film_list">
+			</div>
+		</div>
+		<div id="page">
+		</div>
+	</div>
+	
+	<script type="text/javascript">
+		debug(document.getElementById("search"));
+		initFilmPage(film_information,0);
+		initPageLabel(film_information);
+	</script>
+</body>
+
+</html>
