@@ -1,5 +1,7 @@
 # Films-Info-List:Second Web Assignment
 ***
+## Environment:
+* Based on node.js
 ## Implemented Function
 * Use JavaScript read the film information in the json file.
 * Implement the paging function.

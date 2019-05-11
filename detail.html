@@ -1,237 +1,240 @@
 <!DOCTYPE HTML>
+
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 	<style>
-		#main{
-			text-align:center;
+		#main {
+			text-align: center;
 		}
-		#index{
-			text-align:left;
-			position:relative;
-			left:5%;
+
+		#index {
+			text-align: left;
+			position: relative;
+			left: 5%;
 		}
-		#film_table{
-			margin:0px auto;
+
+		#film_table {
+			margin: 0px auto;
 		}
-		
-		.info{
-			text-align:left;
-			font-size:15px;
-			width:400px;
-			position:relative;
-			left:20px;
+
+		.info {
+			text-align: left;
+			font-size: 15px;
+			width: 400px;
+			position: relative;
+			left: 20px;
 		}
-		
-		.img_item{
-			width:210px;
-			height:280px;
+
+		.img_item {
+			width: 210px;
+			height: 280px;
 		}
-		
-		.rating{
-			text-align:left;
-			position:relative;
-			font-size:14px;
-			left:20px;
-			width:160px;
+
+		.rating {
+			text-align: left;
+			position: relative;
+			font-size: 14px;
+			left: 20px;
+			width: 160px;
 		}
-		
-		#summary{
-			width:770px;
-			margin:0 auto;
+
+		#summary {
+			width: 770px;
+			margin: 0 auto;
 		}
-		#summary p{
-			position:relative;
-			text-align:left;
-			
+
+		#summary p {
+			position: relative;
+			text-align: left;
+
 		}
-		
 	</style>
+	<script type="text/javascript" src="/public/jquery-3.4.1.min.js"></script>
 	<script type="text/javascript">
 		var film_information;
 		var film_id;
-		var film;
-		function getJson(result)
-		{
-			film_information=result;
-        }
-		
-		function getId()
-		{
-			film_id=window.location.search.substr(4,window.location.search.length-4);
+		function getJson(result) {
+			film_information = result;
 		}
-		
-		function init()
+
+		function getId() {
+			film_id = window.location.search.substr(4, window.location.search.length - 4);
+		}
+		function display_info(film)
 		{
+			var main = document.getElementById("main").innerHTML;
+			var flag = 0;
+			main += '<h2>' + film.title + '</h2>';
+			main += '<div> <table id="film_table">';
+			main += '<tr>';
+			main += '<td> <img class="img_item" src="' + film.poster + '"/> </td>';
+			main += '<td class="info"> <p>导演: ';
+			var flag = 0;
+			for (var i = 0; i < film.directors.length; ++i) {
+				if (film.directors[i].name == "")
+					continue;
+				main += film.directors[i].name;
+				flag = 1;
+				if (i != film.directors.length - 1) {
+					main += '/';
+				}
+			}
+			if (film.directors.length == 0 || flag == 0) {
+				main += '暂无信息';
+			}
+			main += '</p>';
+
+			main += '<p> 编剧: ';
+			flag = 0;
+			for (var i = 0; i < film.writers.length; ++i) {
+				if (film.writers[i].name == "")
+					continue;
+				main += film.writers[i].name;
+				flag = 1;
+				if (i != film.writers.length - 1) {
+					main += '/';
+				}
+			}
+			if (film.writers.length == 0 || flag == 0) {
+				main += '暂无信息';
+			}
+			main += '</p>';
+
+
+			main += '<p> 主演: ';
+			flag = 0;
+			for (var i = 0; i < film.casts.length; ++i) {
+				if (film.casts[i].name == "")
+					continue;
+				main += film.casts[i].name;
+				flag = 1;
+				if (i != film.casts.length - 1) {
+					main += '/';
+				}
+			}
+			if (film.casts.length == 0 || flag == 0) {
+				main += '暂无信息';
+			}
+			main += '</p>';
+
+			main += '<p> 类型: ';
+			flag = 0;
+			for (var i = 0; i < film.genres.length; ++i) {
+				if (film.genres[i] == "")
+					continue;
+				main += film.genres[i];
+				flag = 1;
+				if (i != film.genres.length - 1) {
+					main += '/';
+				}
+			}
+			if (film.genres.length == 0 || flag == 0) {
+				main += '暂无信息';
+			}
+			main += '</p>';
+
+			main += '<p> 制片国家/地区: ';
+			flag = 0;
+			for (var i = 0; i < film.countries.length; ++i) {
+				if (film.countries[i] == "")
+					continue;
+				main += film.countries[i];
+				flag = 1;
+				if (i != film.countries.length - 1) {
+					main += '/';
+				}
+			}
+			if (film.countries.length == 0 || flag == 0) {
+				main += '暂无信息';
+			}
+			main += '</p>';
+
+			main += '<p> 语言: ';
+			flag = 0;
+			for (var i = 0; i < film.languages.length; ++i) {
+				if (film.languages[i] == "")
+					continue;
+				main += film.languages[i];
+				flag = 1;
+				if (i != film.languages.length - 1) {
+					main += '/';
+				}
+			}
+			if (film.languages.length == 0 || flag == 0) {
+				main += '暂无信息';
+			}
+			main += '</p>';
+
+			main += '<p> 上映日期: ';
+			flag = 0;
+			for (var i = 0; i < film.pubdate.length; ++i) {
+				if (film.pubdate[i] == "")
+					continue;
+				main += film.pubdate[i];
+				flag = 1;
+				if (i != film.pubdate.length - 1) {
+					main += '/';
+				}
+			}
+			if (film.pubdate.length == 0 || flag == 0) {
+				main += '暂无信息';
+			}
+			main += '</p>';
+
+			main += '<p> 片长: ';
+			if (film.duration == "") {
+				main += '暂无信息';
+			} else {
+				main += film.duration + '分钟';
+			}
+			main += '</p>';
+
+			main += '<p> IMDb链接: ';
+			if (film.imdb == "") {
+				main += '暂无信息';
+			} else {
+				main += '<a href="https://www.imdb.com/title/' + film.imdb + '" target="blank">' + film.imdb + "</a>";
+			}
+			main += '</p>';
+			main += '</td>'
+
+			main += '<td class="rating">';
+			main += '<p>评分: ' + film.rating.average + '&nbsp;' + film.rating.rating_people + '人评价 </p>';
+			for (var i = 0; i < film.rating.stars.length; ++i) {
+				main += '<p>' + (5 - i) + '星: ' + film.rating.stars[i] + '%</p>';
+			}
+			main += '</td>';
+			main += '</tr>';
+			main += '</table> </div>';
+
+			main += '<div id="summary">';
+			main += '<h3>简介</h3>';
+			main += '<p>&emsp;&emsp;' + film.summary + '</p> </div>';
+
+
+			document.getElementById("main").innerHTML = main;
+
+		}
+		function init() {
 			getId();
-			for(var i=0;i<film_information.length;++i){
-				if(film_id==film_information[i]._id){
-					film=film_information[i];
-					break;
-				}
-			}
-			var main= document.getElementById("main").innerHTML;
-			var flag=0;
-			main+='<h2>'+film.title+'</h2>';
-			main+='<div> <table id="film_table">';
-			main+='<tr>';
-			main+='<td> <img class="img_item" src="'+film.poster+'"/> </td>';
-			main+='<td class="info"> <p>导演: ';
-			var flag=0;
-			for(var i=0;i<film.directors.length;++i){
-				if(film.directors[i].name=="")
-				continue;
-				main+=film.directors[i].name;
-				flag=1;
-				if(i!=film.directors.length-1){
-					main+='/';
-				}
-			}
-			if(film.directors.length==0||flag==0){
-				main+='暂无信息';
-			}
-			main+='</p>';
-			
-			main+='<p> 编剧: ';
-			flag=0;
-			for(var i=0;i<film.writers.length;++i){
-				if(film.writers[i].name=="")
-				continue;
-				main+=film.writers[i].name;
-				flag=1;
-				if(i!=film.writers.length-1){
-					main+='/';
-				}
-			}
-			if(film.writers.length==0||flag==0){
-				main+='暂无信息';
-			}
-			main+='</p>';
-			
-			
-			main+='<p> 主演: ';
-			flag=0;
-			for(var i=0;i<film.casts.length;++i){
-				if(film.casts[i].name=="")
-				continue;
-				main+=film.casts[i].name;
-				flag=1;
-				if(i!=film.casts.length-1){
-					main+='/';
-				}
-			}
-			if(film.casts.length==0||flag==0){
-				main+='暂无信息';
-			}
-			main+='</p>';
-			
-			main+='<p> 类型: ';
-			flag=0;
-			for(var i=0;i<film.genres.length;++i){
-				if(film.genres[i]=="")
-				continue;
-				main+=film.genres[i];
-				flag=1;
-				if(i!=film.genres.length-1){
-					main+='/';
-				}
-			}
-			if(film.genres.length==0||flag==0){
-				main+='暂无信息';
-			}
-			main+='</p>';
-			
-			main+='<p> 制片国家/地区: ';
-			flag=0;
-			for(var i=0;i<film.countries.length;++i){
-				if(film.countries[i]=="")
-				continue;
-				main+=film.countries[i];
-				flag=1;
-				if(i!=film.countries.length-1){
-					main+='/';
-				}
-			}
-			if(film.countries.length==0||flag==0){
-				main+='暂无信息';
-			}
-			main+='</p>';
-			
-			main+='<p> 语言: ';
-			flag=0;
-			for(var i=0;i<film.languages.length;++i){
-				if(film.languages[i]=="")
-				continue;
-				main+=film.languages[i];
-				flag=1;
-				if(i!=film.languages.length-1){
-					main+='/';
-				}
-			}
-			if(film.languages.length==0||flag==0){
-				main+='暂无信息';
-			}
-			main+='</p>';
-			
-			main+='<p> 上映日期: ';
-			flag=0;
-			for(var i=0;i<film.pubdate.length;++i){
-				if(film.pubdate[i]=="")
-				continue;
-				main+=film.pubdate[i];
-				flag=1;
-				if(i!=film.pubdate.length-1){
-					main+='/';
-				}
-			}
-			if(film.pubdate.length==0||flag==0){
-				main+='暂无信息';
-			}
-			main+='</p>';
-			
-			main+='<p> 片长: ';
-			if(film.duration==""){
-				main+='暂无信息';
-			}else{
-				main+=film.duration+'分钟';
-			}
-			main+='</p>';
-			
-			main+='<p> IMDb链接: ';
-			if(film.imdb==""){
-				main+='暂无信息';
-			}else{
-				main+='<a href="https://www.imdb.com/title/'+film.imdb+'" target="blank">'+film.imdb+"</a>";
-			}
-			main+='</p>';
-			main+='</td>'
-			
-			main+='<td class="rating">';
-			main+='<p>评分: '+film.rating.average+'&nbsp;'+film.rating.rating_people+'人评价 </p>';
-			for(var i=0;i<film.rating.stars.length;++i){
-				main+='<p>'+(5-i)+'星: '+film.rating.stars[i]+'%</p>';
-			}
-			main+='</td>';
-			main+='</tr>';
-			main+='</table> </div>';
-			
-			main+='<div id="summary">';
-			main+='<h3>简介</h3>';
-			main+='<p>&emsp;&emsp;'+film.summary+'</p> </div>';
-			
-			
-			document.getElementById("main").innerHTML=main;
+			$.get('get_film',{film_id:film_id},function(data){
+				//console.log(data);
+				display_info(data);
+			});
 			
 		}
-		
-	</script>
-	<script type="text/javascript" src="films.json">
 	</script>
 </head>
+
 <body>
 	<div id="main">
-		<a id="index" href="index.html"><h1>电影排行榜</h1></a>
+		<a id="index" href="index.html">
+			<h1>电影排行榜</h1>
+		</a>
 	</div>
 	<script type="text/javascript">
-		init();
+		$(document).ready(function () {
+			init();
+		});
 	</script>
 </body>
