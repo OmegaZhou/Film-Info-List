@@ -153,9 +153,9 @@
 			$.get('get_page', { page_num: page_id, page_size: film_num_per_page ,search:search_info}, function (data) {
 				var num = data.all_num / film_num_per_page;
 				console.log(num);
-				if (data.all_num % film_num_per_page) {
+				/*if (data.all_num % film_num_per_page) {
 					num += 1;
-				}
+				}*/
 				$('#load').hide();
 				initPageLabel(num,search_info);
 				initFilmPage(data.film_list,0);

@@ -17,19 +17,19 @@ app.get('/', function (req, res) {
 app.get('/index.html', function (req, res) {
     res.sendFile(__dirname + '/index.html');
 });
-app.get('/detail.html',function (req, res){
+app.get('/detail.html', function (req, res) {
     res.sendFile(__dirname + '/detail.html');
 })
-app.get('/get_film',function(req,res){
+app.get('/get_film', function (req, res) {
     console.log('get_film');
-    var params=req.query;
-    if(params.film_id==undefined){
+    var params = req.query;
+    if (params.film_id == undefined) {
         res.status(400).send('Bad Request');
         return;
     }
     //console.log(typeof params.film_id);
-    console.log('film_id:'+params.film_id);
-    conn.query('select film_str from INFO where film_id = ?',params.film_id,function(err,result){
+    console.log('film_id:' + params.film_id);
+    conn.query('select film_str from INFO where film_id = ?', params.film_id, function (err, result) {
         if (err) {
             console.log('[SELECT ERROR] - ', err.message);
             return;
@@ -41,17 +41,17 @@ app.get('/get_film',function(req,res){
 app.get('/get_page', function (req, res) {
     console.log('get_page');
     var params = req.query;
-    if (params.page_num == undefined || params.page_size == undefined||params.search_info) {
+    if (params.page_num == undefined || params.page_size == undefined || params.search_info) {
         res.status(400).send('Bad Request');
         return;
     }
-    
+
     if (params.search == '') {
         var page_num = Number(params.page_num);
         var page_size = Number(params.page_size);
-        console.log('Page num: '+page_num);
-        console.log('Page size: '+page_size);
-        conn.query('select film_str from INFO LIMIT ?,?; select max(id) from INFO; ',[page_num*page_size,page_size],function (err, data) {
+        console.log('Page num: ' + page_num);
+        console.log('Page size: ' + page_size);
+        conn.query('select film_str from INFO LIMIT ?,?; select max(id) from INFO; ', [page_num * page_size, page_size], function (err, data) {
             if (err) {
                 console.log('[SELECT ERROR] - ', err.message);
                 return;
@@ -64,21 +64,23 @@ app.get('/get_page', function (req, res) {
             res.json({ film_list: result, all_num: data[1][0]['max(id)'] });
 
         });
-    }else{
-        var page_num = params.page_num;
-        var page_size = params.page_size;
-        console.log('search: '+params.search);
-        console.log(page_num);
-        conn.query('call SEARCH(?);',params.search,function (err, data,filed) {
+    } else {
+        var page_num = Number(params.page_num);
+        var page_size = Number(params.page_size);
+        console.log('search: ' + params.search);
+        console.log('Page num: ' + page_num);
+        console.log('Page size: ' + page_size);
+        conn.query('call SEARCH(?);', params.search, function (err, data, filed) {
             if (err) {
                 console.log('[SELECT ERROR] - ', err.message)
                 return;
             }
-            //console.log(data);
+
             var result = new Array();
-            for (var i = 0; i < page_size; ++i) {
+            for (var i = 0; i < page_size && page_num * page_size + i < data[0].length; ++i) {
                 result[i] = JSON.parse(data[0][page_num * page_size + i]['film_str']);
             }
+            //console.log(data);
             res.json({ film_list: result, all_num: data[0].length });
         });
     }
