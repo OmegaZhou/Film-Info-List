@@ -34,6 +34,10 @@ app.get('/get_film', function (req, res) {
             console.log('[SELECT ERROR] - ', err.message);
             return;
         }
+        if (result.length != 1) {
+            res.status(400).send('Bad Request');
+            return;
+        }
         //console.log(JSON.parse(result[0]['film_str']));
         res.json(JSON.parse(result[0]['film_str']));
     });
@@ -57,7 +61,7 @@ app.get('/get_page', function (req, res) {
                 return;
             }
             var result = new Array();
-            for (var i = 0; i < page_size; ++i) {
+            for (var i = 0; i < page_size && i < data[0].length; ++i) {
                 result[i] = JSON.parse(data[0][i]['film_str']);
             }
             //console.log(data[1]);

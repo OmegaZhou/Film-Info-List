@@ -53,15 +53,16 @@
 	<script type="text/javascript">
 		var film_information;
 		var film_id;
-		function getJson(result) {
-			film_information = result;
+
+
+		function getQueryString(name) {
+
+			var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)", "i");
+			var r = window.location.search.substr(1).match(reg);
+			if (r != null) return unescape(r[2]); return null;
 		}
 
-		function getId() {
-			film_id = window.location.search.substr(4, window.location.search.length - 4);
-		}
-		function display_info(film)
-		{
+		function display_info(film) {
 			var main = document.getElementById("main").innerHTML;
 			var flag = 0;
 			main += '<h2>' + film.title + '</h2>';
@@ -216,12 +217,12 @@
 
 		}
 		function init() {
-			getId();
-			$.get('get_film',{film_id:film_id},function(data){
+
+			$.get('get_film', { film_id: getQueryString('id') }, function (data) {
 				//console.log(data);
 				display_info(data);
 			});
-			
+
 		}
 	</script>
 </head>
