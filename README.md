@@ -1,7 +1,7 @@
 # Films-Info-List: Web Assignment
 ***
 ## Server address:
-* The server address of the project is <a href="134.209.103.188:1998">134.209.103.188:1998 </a>
+* The server address of the project is <a href="">134.209.103.188:1998 </a>
 ## Environment:
 * Front-end:
 	* HTML
