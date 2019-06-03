@@ -1,7 +1,7 @@
 # Films-Info-List: Web Assignment
 ***
 ## Server address:
-* The server address of the project is <a href="http://142.93.113.55:1998">142.93.113.55:1998 </a>
+* The server address of the project is <a href="">Server ip is banned </a>
 ## Environment:
 * Front-end:
 	* HTML
